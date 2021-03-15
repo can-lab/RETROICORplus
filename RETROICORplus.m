@@ -1,5 +1,7 @@
 %--------------------------------------------------------------------------
-%RETROICORplus v1.2 (previously RETROICOR v1.0-v1.1)
+%RETROICORplus v2.1 (previously RETROICOR v1.0-v1.1)
+%
+%2021-03-15: Renamed version to 2.1 (was 1.2, which was probably a typo)
 %
 %RETROICORplus creates physiological noise regressors for fRMI data.
 %
