@@ -1,7 +1,5 @@
 %--------------------------------------------------------------------------
-%RETROICORplus v2.1 (previously RETROICOR v1.0-v1.1)
-%
-%2021-03-15: Renamed version to 2.1 (was 1.2, which was probably a typo)
+%RETROICORplus v2.3 (previously RETROICOR; v1.0-v1.1)
 %
 %RETROICORplus creates physiological noise regressors for fRMI data.
 %
@@ -18,7 +16,15 @@
 %Matthijs Vink, Thomas Gladwin, and Mariet van Buuren at Utrecht
 %University. The current version was updated in collaboration with Mariet
 %van Buuren.
-%EJH 2010-16
+%
+%v2.2: Added a fix for a crash occurring when physiological recording is
+%stopped only very briefly after scanning ends. This can cause crashes
+%because the filtering will make the recording shorter, causing the TTL
+%pulses to occur after the end of the recording.
+%
+%v2.3: Removed bug in cardiac phase regressor calculation
+%
+%EJH 2010-21
 %--------------------------------------------------------------------------
 
 
@@ -85,7 +91,6 @@ R = R(RETROICORbegremscans+1:end-RETROICORendremscans,:); %Remove omitted scans
 
 [path,matname,EXT] = fileparts(matFilename);
 outfile = fullfile(outputdir,[matname,'_RETROICORplus_regr.mat']);
-dlmwrite ([matFilename,'_RETROICORplus_regr','.txt'],R,'delimiter','\t');
 save(outfile,'R');
 
 

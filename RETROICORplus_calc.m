@@ -11,7 +11,7 @@
 %   HRF: heart rate frequency at different temporal delays (1 regressors per time shift)
 %   RVT: Frequency times amplitude of respiration at different temporal delays (1 regressors per time shift) 
 
-%EJH 2010-16
+%EJH 2010-21
 %--------------------------------------------------------------------------
 function [CPR,RPR,NR]=RETROICORplus_calc(TTLlines,Peaklines,Pulsedat,Respdat,sR,RETROICORplus_defaults)
 
@@ -48,7 +48,24 @@ IBIdat(1:Peaklines(1))= IBIdat(Peaklines(1));
 IBIdat(Peaklines(end):end)=IBIdat(Peaklines(end)-1);
 
 %Get cardiac phase for each TTL pulse
-HRPhase_TTL = HRphasedat(TTLlines);
+%20170228: avoid crash if there are TTL pulses beyond the end of the file
+%which can happen if the recording is stopped immediately after scanning,
+%and the filters lead to a shortening of the physiological recording
+%old: HRPhase_TTL = HRphasedat(TTLlines);
+
+%20210311: bug in these lines: it is now feeding the scan trigger samples
+%(HRPhase_TTL) themselves into the CPR fourier expansion. that should of course be the
+%cardiac phase at those scan triggers, so indexing into the HRphasedat.
+%Old lines:
+%HRPhase_TTL = zeros(1,numel(TTLlines));
+%HRPhase_TTL(1:sum(TTLlines<=numel(HRphasedat))) = ...
+%    TTLlines(TTLlines<=numel(HRphasedat));
+%corrected:
+HRPhase_TTL = zeros(1,numel(TTLlines));
+HRPhase_TTL(1:sum(TTLlines<=numel(HRphasedat))) = ...
+    HRphasedat(TTLlines(TTLlines<=numel(HRphasedat)));
+
+
 
 %---------------------------------------------------------------
 %Calculate the respiration phase for each TR
